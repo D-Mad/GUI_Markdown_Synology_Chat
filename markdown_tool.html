@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Editor cho Công ty</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .toolbar {
+      background-color: #f8f9fa;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .toolbar button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .toolbar button:hover {
+      background-color: #0056b3;
+    }
+    .editor-container {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .editor {
+      flex: 1;
+      min-width: 300px;
+      height: 400px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      resize: vertical;
+    }
+    .guide {
+      flex: 1;
+      min-width: 300px;
+      padding: 15px;
+      background-color: #f8f9fa;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    .guide h2 {
+      color: #333;
+      margin-top: 0;
+    }
+    .guide ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+    .guide li {
+      margin-bottom: 10px;
+    }
+    .guide code {
+      background-color: #eee;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+    .actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    .actions button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .actions button:hover {
+      background-color: #218838;
+    }
+    @media (max-width: 768px) {
+      .editor-container {
+        flex-direction: column;
+      }
+      .editor, .guide {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Markdown Editor cho Công ty</h1>
+    <div class="toolbar">
+      <button onclick="applyMarkdown('*', '*')">In đậm</button>
+      <button onclick="applyMarkdown('_', '_')">In nghiêng</button>
+      <button onclick="applyMarkdown('~', '~')">Gạch ngang</button>
+      <button onclick="applyMarkdown('* ', '')">Danh sách</button>
+      <button onclick="applyMarkdown('> ', '')">Trích dẫn</button>
+      <button onclick="applyMarkdown('>>>', '')">Nhiều dòng trích dẫn</button>
+      <button onclick="applyMarkdown('`', '`')">Mã inline</button>
+      <button onclick="applyMarkdown('```\n', '\n```')">Khối mã</button>
+      <button onclick="insertLink()">Liên kết</button>
+    </div>
+    <div class="editor-container">
+      <textarea id="editor" class="editor" placeholder="Nhập Markdown của bạn tại đây..."></textarea>
+      <div class="guide">
+        <h2>Hướng dẫn Markdown</h2>
+        <ul>
+          <li><strong>In đậm:</strong> Dùng <code>*văn bản*</code></li>
+          <li><strong>In nghiêng:</strong> Dùng <code>_văn bản_</code></li>
+          <li><strong>Gạch ngang:</strong> Dùng <code>~văn bản~</code></li>
+          <li><strong>Danh sách:</strong> Dùng <code>* Mục 1</code></li>
+          <li><strong>Trích dẫn:</strong> Dùng <code>&gt; văn bản</code></li>
+          <li><strong>Nhiều dòng trích dẫn:</strong> Dùng <code>&gt;&gt;&gt;</code> theo sau là văn bản</li>
+          <li><strong>Mã inline:</strong> Dùng <code>`mã`</code></li>
+          <li><strong>Khối mã:</strong> Dùng <code>```</code> trước và sau khối mã</li>
+          <li><strong>Liên kết:</strong> Dùng <code>&lt;URL&gt;văn bản</code></li>
+        </ul>
+      </div>
+    </div>
+    <div class="actions">
+      <button onclick="copyToClipboard()">Sao chép nội dung</button>
+      <button onclick="clearEditor()">Xóa nội dung</button>
+      <button onclick="downloadMarkdown()">Tải về file .md</button>
+    </div>
+  </div>
+
+  <script>
+    const editor = document.getElementById('editor');
+
+    function applyMarkdown(startTag, endTag) {
+      const start = editor.selectionStart;
+      const end = editor.selectionEnd;
+      const selection = editor.value.substring(start, end);
+      const before = editor.value.substring(0, start);
+      const after = editor.value.substring(end);
+      editor.value = before + startTag + selection + endTag + after;
+      editor.focus();
+    }
+
+    function insertLink() {
+      const url = prompt('Nhập URL:');
+      const text = prompt('Nhập văn bản hiển thị:');
+      if (url && text) {
+        applyMarkdown('<', `>${text}(${url})`);
+      }
+    }
+
+    function copyToClipboard() {
+      editor.select();
+      document.execCommand('copy');
+      alert('Đã sao chép nội dung vào clipboard!');
+    }
+
+    function clearEditor() {
+      if (confirm('Bạn có chắc muốn xóa toàn bộ nội dung?')) {
+        editor.value = '';
+        editor.focus();
+      }
+    }
+
+    function downloadMarkdown() {
+      const content = editor.value;
+      const blob = new Blob([content], { type: 'text/markdown' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'markdown-content.md';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }
+  </script>
+</body>
+</html>
