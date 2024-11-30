@@ -1,51 +1,51 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-st.set_page_config(page_title="Markdown Editor ", layout="wide")
+st.set_page_config(page_title="Synology Markdown Editor", layout="wide")
 
 # Custom HTML/JavaScript component with original styling
 markdown_editor_html = """
 <div style="font-family: Arial, sans-serif;">
-    <h1 style="text-align: center; color: #FFF; margin-bottom: 20px;">Markdown Editor </h1>
+    <h1 style="text-align: center; color: #FFF; margin-bottom: 20px;">Synology Markdown Editor</h1>
     
     <div style="display: flex; margin-bottom: 20px;">
         <div style="flex: 1; margin-right: 20px;">
             <div class="toolbar" style="background-color: #f8f9fa; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
-                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('*', '*')">In đậm</button>
-                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('_', '_')">In nghiêng</button>
-                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('~', '~')">Gạch ngang</button>
-                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('* ', '')">Danh sách</button>
-                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('> ', '')">Trích dẫn</button>
-                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('>>>', '')">Nhiều dòng trích dẫn</button>
-                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('`', '`')">Mã inline</button>
-                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('```\\n', '\\n```')">Khối mã</button>
-                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="insertLink()">Liên kết</button>
+                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('*', '*')">Bold</button>
+                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('_', '_')">Italic</button>
+                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('~', '~')">Strikethrough</button>
+                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('* ', '')">List</button>
+                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('> ', '')">Quote</button>
+                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('>>>', '')">Multi-line Quote</button>
+                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('`', '`')">Inline Code</button>
+                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="applyMarkdown('```\\n', '\\n```')">Code Block</button>
+                <button style="background-color: #007bff; color: white; border: none; padding: 8px 12px; margin-right: 5px; border-radius: 4px; cursor: pointer;" onclick="insertLink()">Link</button>
             </div>
             
             <div style="display: flex;">
                 <textarea id="editor" style="flex: 1; height: 400px; padding: 15px; border: 1px solid #ddd; border-radius: 4px; font-family: monospace; font-size: 14px; line-height: 1.5;"
-                          placeholder="Nhập Markdown của bạn tại đây..."></textarea>
+                          placeholder="Enter your Markdown text here..."></textarea>
                           
                 <div style="flex: 1; margin-left: 20px; padding: 15px; background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 4px;">
-                    <h2 style="margin-top: 0; color: #333;">Hướng dẫn Markdown</h2>
+                    <h2 style="margin-top: 0; color: #333;">Markdown Guide</h2>
                     <ul style="padding-left: 20px; margin: 0;">
-                        <li style="margin-bottom: 10px;"><strong>In đậm:</strong> Dùng <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">*văn bản*</code></li>
-                        <li style="margin-bottom: 10px;"><strong>In nghiêng:</strong> Dùng <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">_văn bản_</code></li>
-                        <li style="margin-bottom: 10px;"><strong>Gạch ngang:</strong> Dùng <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">~văn bản~</code></li>
-                        <li style="margin-bottom: 10px;"><strong>Danh sách:</strong> Dùng <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">* Mục 1</code></li>
-                        <li style="margin-bottom: 10px;"><strong>Trích dẫn:</strong> Dùng <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">&gt; văn bản</code></li>
-                        <li style="margin-bottom: 10px;"><strong>Nhiều dòng trích dẫn:</strong> Dùng <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">&gt;&gt;&gt;</code></li>
-                        <li style="margin-bottom: 10px;"><strong>Mã inline:</strong> Dùng <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">`mã`</code></li>
-                        <li style="margin-bottom: 10px;"><strong>Khối mã:</strong> Dùng <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">```</code></li>
-                        <li style="margin-bottom: 10px;"><strong>Liên kết:</strong> Dùng <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">&lt;URL&gt;văn bản</code></li>
+                        <li style="margin-bottom: 10px;"><strong>Bold:</strong> Use <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">*text*</code></li>
+                        <li style="margin-bottom: 10px;"><strong>Italic:</strong> Use <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">_text_</code></li>
+                        <li style="margin-bottom: 10px;"><strong>Strikethrough:</strong> Use <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">~text~</code></li>
+                        <li style="margin-bottom: 10px;"><strong>List:</strong> Use <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">* Item 1</code></li>
+                        <li style="margin-bottom: 10px;"><strong>Quote:</strong> Use <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">&gt; text</code></li>
+                        <li style="margin-bottom: 10px;"><strong>Multi-line Quote:</strong> Use <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">&gt;&gt;&gt;</code></li>
+                        <li style="margin-bottom: 10px;"><strong>Inline Code:</strong> Use <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">`code`</code></li>
+                        <li style="margin-bottom: 10px;"><strong>Code Block:</strong> Use <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">```</code></li>
+                        <li style="margin-bottom: 10px;"><strong>Link:</strong> Use <code style="background-color: #eee; padding: 2px 4px; border-radius: 3px;">&lt;URL&gt;text</code></li>
                     </ul>
                 </div>
             </div>
             
             <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
-                <button style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;" onclick="copyContent()">Sao chép nội dung</button>
-                <button style="background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;" onclick="clearContent()">Xóa nội dung</button>
-                <button style="background-color: #17a2b8; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;" onclick="downloadMarkdown()">Tải về file .md</button>
+                <button style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;" onclick="copyContent()">Copy Content</button>
+                <button style="background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;" onclick="clearContent()">Clear Content</button>
+                <button style="background-color: #17a2b8; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;" onclick="downloadMarkdown()">Download .md File</button>
             </div>
         </div>
     </div>
@@ -65,8 +65,8 @@ markdown_editor_html = """
         }
         
         function insertLink() {
-            const url = prompt('Nhập URL:');
-            const text = prompt('Nhập văn bản hiển thị:');
+            const url = prompt('Enter URL:');
+            const text = prompt('Enter display text:');
             if (url && text) {
                 applyMarkdown('<', `>${text}(${url})`);
             }
@@ -75,11 +75,11 @@ markdown_editor_html = """
         function copyContent() {
             editor.select();
             document.execCommand('copy');
-            alert('Đã sao chép nội dung vào clipboard!');
+            alert('Content copied to clipboard!');
         }
         
         function clearContent() {
-            if (confirm('Bạn có chắc muốn xóa toàn bộ nội dung?')) {
+            if (confirm('Are you sure you want to clear all content?')) {
                 editor.value = '';
                 editor.focus();
                 saveToLocalStorage();
